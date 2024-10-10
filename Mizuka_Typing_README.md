@@ -1,6 +1,7 @@
+
 # Mizuka Typing
 
-Mizuka Typing is an elegant and interactive typing experience built using React. The application offers multiple modes such as word typing, sentence typing, free typing, and more, with features like sound effects, focused mode, ultra-zen mode, and local storage persistence for user settings.
+**Mizuka Typing** is an elegant and interactive typing experience built using React. The application offers multiple modes such as word typing, sentence typing, free typing, and more, with features like sound effects, focused mode, ultra-zen mode, and local storage persistence for user settings.
 
 ## Features
 
@@ -16,30 +17,30 @@ Mizuka Typing is an elegant and interactive typing experience built using React.
 
 ### Prerequisites
 
-- Node.js (v14 or higher recommended)
-- npm or yarn
+- **Node.js** (v14 or higher recommended)
+- **npm** or **yarn**
 
 ### Installation
 
 1. Clone the repository:
-    ```bash
-    git clone https://github.com/zahooruddin-dev/mizuka-typing-2.0.git
-    cd mizuka-typing
-    ```
+   ```bash
+   git clone https://github.com/zahooruddin-dev/mizuka-typing-2.0.git
+   cd mizuka-typing
+   ```
 
 2. Install the dependencies:
-    ```bash
-    npm install
-    ```
+   ```bash
+   npm install
+   ```
 
 3. Start the development server:
-    ```bash
-    npm start
-    ```
+   ```bash
+   npm start
+   ```
 
 4. Open your browser and navigate to `http://localhost:3000` to start using Mizuka Typing.
 
-### Available Scripts
+## Available Scripts
 
 - `npm start`: Starts the development server.
 - `npm run build`: Builds the app for production.
