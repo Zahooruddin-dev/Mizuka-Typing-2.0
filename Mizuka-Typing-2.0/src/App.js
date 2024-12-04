@@ -223,6 +223,7 @@ function App() {
             <WordsCard soundMode={soundMode} soundType={soundType}></WordsCard>
           )}
           <div className="bottomBar">
+            
             <FooterMenu
               isWordGameMode={isWordGameMode}
               themesOptions={themesOptions}
@@ -246,6 +247,7 @@ function App() {
               isWordsCardMode={isWordsCardMode}
               toggleWordsCardMode={toggleWordsCardMode}
             ></FooterMenu>
+                
           </div>
 
         </div>
