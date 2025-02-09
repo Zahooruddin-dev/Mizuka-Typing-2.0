@@ -1,0 +1,2 @@
+self.onmessage=function(e){var r=e.data,t=r.countDown,n=r.countDownConstant,s=r.typingTestHistory,a=r.roundedWpm,o=r.roundedRawWpm,c=r.incorrectCharsCount,i=!1,u=1;switch(n){case 90:case 60:case 30:i=t%5===0,u=5;break;default:i=!0,u=1}if(i){var w=s.length*u;postMessage({newEntry:{wpm:a,rawWpm:o,time:w,error:c},resetErrors:!0})}};
+//# sourceMappingURL=514.489e435b.chunk.js.map

@@ -1,0 +1,2 @@
+self.onmessage=function(e){try{var s=e.data,r=s.rawKeyStrokes,o=s.countDownConstant,t=s.countDown;if("number"!==typeof r||r<0)throw new Error("Invalid keystrokes value");if("number"!==typeof o||"number"!==typeof t)throw new Error("Invalid time values");var a=r/5/Math.max((o-t)/60,.016),n=Math.round(100*a)/100;postMessage({success:!0,wpm:n})}catch(u){postMessage({success:!1,error:u.message})}};
+//# sourceMappingURL=268.35b9a959.chunk.js.map

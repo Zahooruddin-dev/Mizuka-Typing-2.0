@@ -9,7 +9,8 @@ const lightTheme = {
   fontFamily: "sans-serif",
 };
 
-const Retro = {
+// Retro theme for a vintage look
+const retroTheme = {
   label: "Retro",
   background: "#011628",
   text: "#CBE0F0",
@@ -20,6 +21,7 @@ const Retro = {
   fontFamily: "sans-serif",
 };
 
+// Dark theme for low-light environments
 const darkTheme = {
   label: "Dark",
   background: "#121212",
@@ -31,7 +33,7 @@ const darkTheme = {
   fontFamily: "sans-serif",
 };
 
-
+// Cyber theme with vibrant colors
 const cyberTheme = {
   label: "Cyber",
   background: "#272932",
@@ -43,30 +45,33 @@ const cyberTheme = {
   fontFamily: "Tomorrow",
 };
 
-const elegant = {
+// Elegant theme inspired by Araki Nobuyoshi
+const elegantTheme = {
   label: "Araki Nobuyoshi",
   background: "#232335",
   text: "#086063",
-  gradient: "linear-gradient(90deg, 	#232335 0%, #0a4951 100%)",
+  gradient: "linear-gradient(90deg, #232335 0%, #0a4951 100%)",
   title: "#B42D2C",
   textTypeBox: "#CCB1B0",
   stats: "#1a5426",
   fontFamily: "sans-serif",
 };
 
+// Blood theme with dark tones
 const bloodTheme = {
-  label: "blood",
+  label: "Blood",
   background: "#440402",
   text: "#3A3E47",
-  gradient: "linear-gradient(90deg, 	#70A960 0%, #76C9A5 100%)",
+  gradient: "linear-gradient(90deg, #70A960 0%, #76C9A5 100%)",
   title: "#B80100",
   textTypeBox: "#CD6A5A",
   stats: "#6A839D",
   fontFamily: "sans-serif",
 };
 
-const metalic = {
-  label: "metalic",
+// Metallic theme with a sleek design
+const metallicTheme = {
+  label: "Metallic",
   background: "linear-gradient(to left top, rgba(0, 0, 0, 0.25),  #888B8D)",
   text: "#353535",
   gradient: "linear-gradient(90deg, #888B8D 0%, #FAF9F6 100%)",
@@ -77,6 +82,7 @@ const metalic = {
   textShadow: "0px -1px 0px rgba(0,0,0,0.3)",
 };
 
+// Piano theme with a classic look
 const pianoTheme = {
   label: "Piano",
   background: "linear-gradient(to bottom,  #000, #222)",
@@ -89,18 +95,16 @@ const pianoTheme = {
   textShadow: "0px -1px 0px rgba(0,0,0,0.3)",
 };
 
-
-
 const defaultTheme = darkTheme;
 
 const themesOptions = [
   { value: darkTheme, label: "Dark" },
-  { value: Retro, label: "Retro" },
-  { value: metalic, label: "Metalic" },
+  { value: retroTheme, label: "Retro" },
+  { value: metallicTheme, label: "Metallic" },
   { value: pianoTheme, label: "Piano" },
   { value: cyberTheme, label: "Cyber" },
-  { value: elegant, label: "Elegant" },
-  { value: bloodTheme, label: "blood" },
+  { value: elegantTheme, label: "Elegant" },
+  { value: bloodTheme, label: "Blood" },
   { value: lightTheme, label: "Bright" },
 ];
 
@@ -108,11 +112,11 @@ export {
   lightTheme,
   darkTheme,
   cyberTheme,
-  elegant,
+  elegantTheme,
   bloodTheme,
-  metalic,
+  metallicTheme,
   pianoTheme,
   defaultTheme,
   themesOptions,
-  Retro,
+  retroTheme,
 };

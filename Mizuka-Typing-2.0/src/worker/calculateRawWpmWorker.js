@@ -1,10 +1,27 @@
 // eslint-disable-next-line no-restricted-globals
 self.onmessage = function (e) {
-  const { rawKeyStrokes, countDownConstant, countDown } = e.data;
+  try {
+    const { rawKeyStrokes, countDownConstant, countDown } = e.data;
+    
+    // Validate inputs
+    if (typeof rawKeyStrokes !== 'number' || rawKeyStrokes < 0) {
+      throw new Error('Invalid keystrokes value');
+    }
+    if (typeof countDownConstant !== 'number' || typeof countDown !== 'number') {
+      throw new Error('Invalid time values');
+    }
 
-  const roundedRawWpm = Math.round(
-    (rawKeyStrokes / 5 / (countDownConstant - countDown + 1)) * 60.0
-  );
+    // Calculate elapsed time in minutes, prevent division by zero
+    const elapsedTimeMinutes = Math.max((countDownConstant - countDown) / 60.0, 0.016); // Minimum 1 second
 
-  postMessage(roundedRawWpm);
+    // Calculate raw WPM (5 characters = 1 word)
+    const rawWpm = (rawKeyStrokes / 5) / elapsedTimeMinutes;
+    
+    // Round to 2 decimal places for consistency
+    const roundedRawWpm = Math.round(rawWpm * 100) / 100;
+
+    postMessage({ success: true, wpm: roundedRawWpm });
+  } catch (error) {
+    postMessage({ success: false, error: error.message });
+  }
 };

@@ -13,7 +13,25 @@ import {
 } from "recharts";
 import { red } from "@mui/material/colors";
 
-const Stats = ({
+const getFormattedLanguageLanguageName = (value) => {
+  switch (value) {
+    case "ENGLISH_MODE":
+      return "eng";
+    default:
+      return "eng";
+  }
+};
+
+const initialTypingTestHistory = [
+  {
+    wpm: 0,
+    rawWpm: 0,
+    time: 0,
+    error: 0,
+  },
+];
+
+const Stats = React.memo(({
   status,
   wpm,
   countDown,
@@ -28,6 +46,23 @@ const Stats = ({
 }) => {
   const [roundedRawWpm, setRoundedRawWpm] = useState(0);
   const roundedWpm = Math.round(wpm);
+
+  const [typingTestHistory, setTypingTestHistory] = useState(
+    initialTypingTestHistory
+  );
+
+  const data = React.useMemo(() => 
+    typingTestHistory.map((history) => ({
+      wpm: history.wpm,
+      rawWpm: history.rawWpm,
+      time: history.time,
+      error: history.error,
+    }))
+  , [typingTestHistory]);
+
+  const accuracy = React.useMemo(() => 
+    Math.round((statsCharCount[1] / (statsCharCount[1] + statsCharCount[2])) * 100)
+  , [statsCharCount]);
 
   useEffect(() => {
     const worker = new Worker(
@@ -44,28 +79,6 @@ const Stats = ({
     return () => worker.terminate();
   }, [rawKeyStrokes, countDownConstant, countDown]);
 
-  const initialTypingTestHistory = [
-    {
-      wpm: 0,
-      rawWpm: 0,
-      time: 0,
-      error: 0,
-    },
-  ];
-
-  const [typingTestHistory, setTypingTestHistory] = useState(
-    initialTypingTestHistory
-  );
-
-  const accuracy = Math.round(statsCharCount[0]);
-
-  const data = typingTestHistory.map((history) => ({
-    wpm: history.wpm,
-    rawWpm: history.rawWpm,
-    time: history.time,
-    error: history.error,
-  }));
-
   useEffect(() => {
     if (status === "started") {
       setTypingTestHistory(initialTypingTestHistory);
@@ -78,40 +91,63 @@ const Stats = ({
         new URL("../../../worker/trackHistoryWorker", import.meta.url)
       );
 
-      worker.postMessage({
+      const workerData = {
         countDown,
         countDownConstant,
         typingTestHistory,
         roundedWpm,
         roundedRawWpm,
         incorrectCharsCount,
-      });
+      };
 
-      worker.onmessage = function (e) {
+      worker.postMessage(workerData);
+
+      const handleMessage = (e) => {
         const { newEntry, resetErrors } = e.data;
-        setTypingTestHistory((prevTypingTestHistory) => [
-          ...prevTypingTestHistory,
-          newEntry,
-        ]);
-
+        setTypingTestHistory((prev) => [...prev, newEntry]);
         if (resetErrors) {
           setIncorrectCharsCount(0);
         }
       };
 
-      // Clean up the worker on component unmount
+      worker.onmessage = handleMessage;
+
       return () => worker.terminate();
     }
-  }, [countDown]);
+  }, [
+    countDown,
+    countDownConstant,
+    incorrectCharsCount,
+    roundedRawWpm,
+    roundedWpm,
+    setIncorrectCharsCount,
+    status,
+    typingTestHistory
+  ]);
 
-  const getFormattedLanguageLanguageName = (value) => {
-    switch (value) {
-      case "ENGLISH_MODE":
-        return "eng";
-      default:
-        return "eng";
-    }
-  };
+  // Add this effect to handle audio context
+  useEffect(() => {
+    // Function to initialize audio
+    const initializeAudio = () => {
+      if (window.Howler) {
+        window.Howler.ctx && window.Howler.ctx.resume();
+      }
+    };
+
+    // Add event listeners for user interactions
+    const userInteractions = ['click', 'keydown', 'touchstart'];
+    
+    userInteractions.forEach(event => {
+      document.addEventListener(event, initializeAudio, { once: true });
+    });
+
+    // Cleanup
+    return () => {
+      userInteractions.forEach(event => {
+        document.removeEventListener(event, initializeAudio);
+      });
+    };
+  }, []);
 
   const renderCharStats = () => (
     <Tooltip
@@ -138,7 +174,7 @@ const Stats = ({
     ></span>
   );
 
-  const CustomTooltip = ({ active, payload, label }) => {
+  const CustomTooltip = React.useCallback(({ active, payload, label }) => {
     if (active && payload && payload.length) {
       const payloadData = payload[0].payload;
       return (
@@ -167,9 +203,8 @@ const Stats = ({
         </div>
       );
     }
-
     return null;
-  };
+  }, [theme.text, theme.textTypeBox]);
 
   const renderAccuracy = () => (
     <div style={{ marginTop: "16px" }}>
@@ -178,14 +213,25 @@ const Stats = ({
     </div>
   );
 
-  const renderRawKpm = () => (
-    <div>
-      <p className="stats-title">KPM</p>
-      <h2 className="stats-value">
-        {Math.round((rawKeyStrokes / Math.max(countDownConstant, 1)) * 60.0)}
-      </h2>
-    </div>
-  );
+  const renderRawKpm = () => {
+    const currentWpm = Math.round(wpm); // Get the current WPM
+    const accuracyPercentage = accuracy; // Assuming accuracy is already calculated as a percentage
+
+    // Calculate effective WPM based on accuracy
+    const effectiveWpm = 
+      typeof currentWpm === 'number' && 
+      typeof accuracyPercentage === 'number' && 
+      accuracyPercentage >= 0 && accuracyPercentage <= 100
+        ? Math.round(currentWpm * (accuracyPercentage / 100)) // Calculate effective WPM
+        : 0; // Default to 0 if values are invalid
+    
+    return (
+      <div>
+        <p className="stats-title">WPM</p>
+        <h2 className="stats-value">{effectiveWpm}</h2>
+      </div>
+    );
+  };
 
   const renderLanguage = () => (
     <div>
@@ -208,13 +254,13 @@ const Stats = ({
     const averageWpm = data.length > 1 ? totalWpm / (data.length - 1) : 0;
     return (
       <div>
-        <h2 className="primary-stats-title">WPM</h2>
+        <h2 className="primary-stats-title">Raw WPM</h2>
         <h1 className="primary-stats-value">{Math.round(averageWpm)}</h1>
       </div>
     );
   };
 
-  const Chart = () => (
+  const Chart = React.useCallback(() => (
     <ResponsiveContainer
       width="100%"
       minHeight={200}
@@ -263,7 +309,7 @@ const Stats = ({
         <Bar dataKey="error" barSize={12} fill={`${red[400]}`} />
       </ComposedChart>
     </ResponsiveContainer>
-  );
+  ), [data, theme.text, theme.textTypeBox]);
 
   return (
     <>
@@ -296,6 +342,6 @@ const Stats = ({
       )}
     </>
   );
-};
+});
 
 export default Stats;
