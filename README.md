@@ -1,6 +1,6 @@
 # Mizuka Typing
 
-**Mizuka Typing** is an elegant and interactive typing experience built using React. The application offers multiple modes such as word typing, sentence typing, free typing, and more, with features like sound effects, focused mode, ultra-zen mode, and local storage persistence for user settings.
+**Mizuka Typing** is an elegant and interactive typing experience built using ReactJS The application offers multiple modes such as word typing, sentence typing, free typing, and more, with features like sound effects, focused mode, ultra-zen mode, and local storage persistence for user settings.
 
 ## Features
 
